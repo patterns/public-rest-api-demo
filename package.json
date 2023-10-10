@@ -1,0 +1,38 @@
+{
+  "name": "website_backend",
+  "version": "1.0.0",
+  "description": "backend service for da-vinci",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "docker:db:up": "docker-compose -f docker/mongodb.yml up -d",
+    "docker:db:down": "docker-compose -f docker/mongodb.yml down",
+    "start": "node ./dist/index.js",
+    "build": "tsc",
+    "prettier": "prettier --write \"src/**/*.{ts,css,js,html}\"",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aos": "^2.3.4",
+    "axios": "^1.5.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.2"
+  },
+  "devDependencies": {
+    "@types/aos": "^3.0.4",
+    "@types/bcryptjs": "^2.4.4",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/node": "^20.6.2",
+    "concurrently": "^8.2.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
+}
