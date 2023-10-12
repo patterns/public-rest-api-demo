@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY bun.lockb ./
 COPY src ./
-RUN bun install --production
+RUN bun install
 
 FROM oven/bun:alpine
 LABEL org.opencontainers.image.source="https://github.com/patterns/public-rest-api-demo"
