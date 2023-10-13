@@ -6,7 +6,7 @@ let mongoDBURI;
 if (process.env.NODE_ENV === 'test') {
   mongoDBURI = process.env.TEST_MONGODB_URI ?? 'mongodb://localhost:27017';
 } else {
-  mongoDBURI = process.env.ATLAS_URI ?? 'mongodb://localhost:27017';
+  mongoDBURI = process.env.ATLAS_URI ;
 }
 
 mongoose.connect(mongoDBURI);
