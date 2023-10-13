@@ -11,3 +11,5 @@ and adjusted according to the MongoDB blog (by Zuhair Ahmed): https://www.mongod
 
 - with Leka-Workshop/Bun-CRUD-App attempt to push to gh registry for use as the app_image in cloud run
 
+- terraform google cloud provider expects app_image to have the registry in the form of [region.]gcr.io, [region-]docker.pkg.dev or docker.io BUT we wanted to use ghcr.io
+

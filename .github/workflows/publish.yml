@@ -17,9 +17,9 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: 'Login to Github Container Registrty'
+      - name: 'Login to Github Container Registry'
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
