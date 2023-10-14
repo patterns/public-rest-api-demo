@@ -13,3 +13,5 @@ and adjusted according to the MongoDB blog (by Zuhair Ahmed): https://www.mongod
 
 - terraform google cloud provider expects app_image to have the registry in the form of [region.]gcr.io, [region-]docker.pkg.dev or docker.io BUT we wanted to use ghcr.io
 
+- the connection string for the original GCP tutorial didn't need the db_name because the nodejs logic has it in the connect call. We had to append it the the ATLAS_URI since the bun/elysia example is db_name agnostic.
+

@@ -50,7 +50,7 @@ resource "google_cloud_run_service" "app" {
 
         env {
           name  = "ATLAS_URI"
-          value = local.atlas_uri
+          value = "${local.atlas_uri}/${var.db_name}"
         }
         env {
           name  = "JWT_SECRET"

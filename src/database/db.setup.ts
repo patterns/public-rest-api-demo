@@ -6,7 +6,12 @@ let mongoDBURI;
 if (process.env.NODE_ENV === 'test') {
   mongoDBURI = process.env.TEST_MONGODB_URI ?? 'mongodb://localhost:27017';
 } else {
-  mongoDBURI = process.env.ATLAS_URI ;
+  const { ATLAS_URI } = process.env;
+  if (!ATLAS_URI) {
+    console.error("No ATLAS_URI environment variable has been defined in config.env");
+    process.exit(1);
+  }
+  mongoDBURI = ATLAS_URI;
 }
 
 mongoose.connect(mongoDBURI);
