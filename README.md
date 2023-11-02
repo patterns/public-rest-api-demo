@@ -1,12 +1,12 @@
 # public-rest-api-demo
-public repo to attempt deploy to render (or heroku free tier) and also proof terraform aws too
+public repo to attempt deploy to render (or heroku free tier)
 
 
 ## dev notes
 
-started from the GCP cloudrun meanstack terraform files: https://cloud.google.com/blog/topics/developers-practitioners/easy-deployment-mean-stack-w-mongodb-atlas-cloud-run-and-hashicorp-terraform/
-and adjusted according to the MongoDB blog (by Zuhair Ahmed): https://www.mongodb.com/developer/products/atlas/deploy-mongodb-atlas-terraform-aws/
+copied files straight from github.com/supertokens/supertokens-auth-react/examples/with-account-linking
 
-the hashicorp learn tutorial states that Heroku formation requires a billing account: https://developer.hashicorp.com/terraform/tutorials/applications/heroku-provider
+- with the hope that instead of launching locally, Render can deploy with little modification;
+
 
 
