@@ -1,0 +1,18 @@
+
+
+services:
+
+  - type: web
+    name: supertokens-demo
+    runtime: node
+    repo: https://github.com/patterns/public-rest-api-demo.git
+    branch: supertokens
+    buildCommand: npm install && cd frontend && npm install && cd ../backend && npm install && cd ../
+    startCommand: npm run start
+    envVars:
+      - key: REACT_APP_WEBSITE_PORT
+        value: 8000
+      - key: REACT_APP_WEBSITE_URL
+        sync: false
+
+
