@@ -56,6 +56,31 @@ resource "google_cloud_run_service" "app" {
           name  = "JWT_SECRET"
           value = var.jwt_secret
         }
+        env {
+          name  = "FIREBASE_API_KEY"
+          value = var.firebase_api_key
+        }
+        env {
+          name  = "FIREBASE_AUTH_DOMAIN"
+          value = var.firebase_auth_domain
+        }
+        env {
+          name  = "FIREBASE_PROJECT_ID"
+          value = var.firebase_project_id
+        }
+        env {
+          name  = "FIREBASE_STORAGE_BUCKET"
+          value = var.firebase_storage_bucket
+        }
+        env {
+          name  = "FIREBASE_MESSAGING_SENDER_ID"
+          value = var.firebase_messaging_sender_id
+        }
+        env {
+          name  = "FIREBASE_APP_ID"
+          value = var.firebase_app_id
+        }
+
       }
     }
   }

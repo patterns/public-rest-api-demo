@@ -1,11 +1,11 @@
 import { Document, Schema, model } from 'mongoose';
 
-export interface ISession extends Document {
+export interface IAuthSession extends Document {
   authprovider: string;
   accesstoken: string;
 }
 
-const schema = new Schema<ISession>(
+const schema = new Schema<IAuthSession>(
   {
     authprovider: {
       type: String,
@@ -22,4 +22,4 @@ const schema = new Schema<ISession>(
   }
 );
 
-export default model<ISession>('session', schema);
+export default model<IAuthSession>('authsession', schema);

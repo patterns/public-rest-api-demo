@@ -103,3 +103,37 @@ variable "jwt_secret" {
   description = "token value the consumer sends in its Authorization Bearer header"
   default     = "toinfinityandbeyond"
 }
+
+###-----------------------------------------------------------------------------
+### Firebase SDK
+###-----------------------------------------------------------------------------
+
+variable "firebase_api_key" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_auth_domain" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_project_id" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_storage_bucket" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_messaging_sender_id" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_app_id" {
+  type        = string
+  description = "firebase config inside the app image"
+}
