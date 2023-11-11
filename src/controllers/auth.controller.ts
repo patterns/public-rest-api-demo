@@ -72,10 +72,11 @@ export const authController = (app: Elysia) =>
                 'X-Authorization': sessJWT,
               };
               handler.set.status = 201;
-              return {
-                message: 'Started sign-in session',
-                status: 201,
-              };
+              return newSess;
+              //return {
+              //  message: 'Started sign-in session',
+              //  status: 201,
+              //};
             } catch (e: any) {
               // If unique mongoose constraint  is violated
               if (e.name === 'MongoServerError' && e.code === 11000) {
