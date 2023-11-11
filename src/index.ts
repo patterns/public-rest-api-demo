@@ -4,7 +4,7 @@ import './database/db.setup';
 import { securitySetup } from './startup/security'
 import { docsSetup } from './startup/docs';
 import { hooksSetup } from './startup/hooks';
-import { usersController } from './controllers/users.controller';
+import { cordycepsController } from './controllers/cordyceps.controller';
 import { staticDataController } from './controllers/static-data.controller';
 import { authController } from './controllers/auth.controller';
 
@@ -19,7 +19,7 @@ app
   .get('/', () => 'Hello Bun.js!')
   .group('/api', (app: Elysia) =>
     app
-      .use(usersController)
+      .use(cordycepsController)
       .use(staticDataController)
       .use(authController)
   )

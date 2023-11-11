@@ -26,23 +26,34 @@ export const authController = (app: Elysia) =>
         })
       }, (app: Elysia) => app
           // This route is protected by the Guard above
-          .post('/github', async (handler: Elysia.Handler) => {
+          .post('/signin', async (handler: Elysia.Handler) => {
             const newSess = new AuthSession();
-            newSess.authprovider = handler.body.authprovider;
-            newSess.accesstoken = handler.body.accesstoken;
+
             // support is limited to github oauth for demo
-            if (newSess.authprovider != 'github') {
+            if (handler.body.authprovider != 'github') {
               handler.set.status = 500;
               return { message: 'Not implemented' };
             }
+            // TODO choose a real decode
+            const decoded = atob(handler.body.accesstoken);
             // Sign in with the credential from the user.
-            const credential = GithubAuthProvider.credential(newSess.accesstoken);
+            const credential = GithubAuthProvider.credential(decoded);
             const firebaseApp = initializeApp(FIREBASE_CONFIG);
             const authentic = getAuth(firebaseApp);
-            ////const result = await signInWithCredential(authentic, credential);
+
             signInWithCredential(authentic, credential)
               .then((result: any) => {
-                console.log('Firebase sign in succeeded.');
+                ////console.log('Firebase sign in succeeded.');
+                newSess.displayname = result.user.displayName;
+                newSess.email = result.user.email;
+                newSess.emailverified = result.user.emailVerified;
+                newSess.isanonymous = result.user.isAnonymous;
+                newSess.providerid = result.user.providerId;
+                newSess.tenantid = result.user.tenantId;
+                newSess.uid = result.user.uid;
+                ////newSess.refreshtoken = result.user.refreshToken;
+                ////newSess.phonenumber = result.user.phoneNumber;
+                ////newSess.photourl = result.user.photourl;
               })
               .catch((error) => {
                 handler.set.status = 500;

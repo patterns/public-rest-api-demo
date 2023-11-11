@@ -1,9 +1,9 @@
 import { Elysia, t } from 'elysia';
-import User, { IUser } from '../entities/user.schema';
+import Cordyceps, { ICordyceps } from '../entities/cordyceps.schema';
 import { jwt } from '@elysiajs/jwt';
 
-export const usersController = (app: Elysia) =>
-  app.group('/users', (app: Elysia) =>
+export const cordycepsController = (app: Elysia) =>
+  app.group('/cordyceps', (app: Elysia) =>
     app
 
       // Using JWT
@@ -17,25 +17,23 @@ export const usersController = (app: Elysia) =>
       // Validating required properties using Guard schema
       .guard({
         body: t.Object({
-            username: t.String(),
-            email: t.String(),
-            password: t.String()
+            nickname: t.String(),
+            species: t.String()
         })
       }, (app: Elysia) => app
           // This route is protected by the Guard above
           .post('/', async (handler: Elysia.Handler) => {
             try {
 
-              const newUser = new User();
-              newUser.username = handler.body.username;
-              newUser.email = handler.body.email;
-              newUser.password = handler.body.password;
+              const newCordyceps = new Cordyceps();
+              newCordyceps.nickname = handler.body.nickname;
+              newCordyceps.species = handler.body.species;
 
-              const savedUser = await newUser.save();
+              const saved = await newCordyceps.save();
 
-              // JWT payload is based off user id
+              // JWT payload is based off record id
               const accessToken = await handler.jwt.sign({
-                userId: savedUser._id
+                recordId: saved._id
               });
 
               // Returning JTW to the client (via headers)
@@ -44,9 +42,9 @@ export const usersController = (app: Elysia) =>
               };
               handler.set.status = 201;
 
-              return newUser;
+              return newCordyceps;
             } catch (e: any) {
-              // If unique mongoose constraint (for username or email) is violated
+              // If unique mongoose constraint (for species) is violated
               if (e.name === 'MongoServerError' && e.code === 11000) {
                 handler.set.status = 422;
                 return {
@@ -72,8 +70,8 @@ export const usersController = (app: Elysia) =>
       // Guard does not affect the following routes
       .get('/', async ({ set }: Elysia.Set) => {
         try {
-          const users = await User.find({});
-          return users;
+          const cordyceps = await Cordyceps.find({});
+          return cordyceps;
         } catch (e: unknown) {
           set.status = 500;
           return {
@@ -87,9 +85,9 @@ export const usersController = (app: Elysia) =>
         try {
           const { id } = handler.params;
 
-          const existingUser = await User.findById(id);
+          const existingCordyceps = await Cordyceps.findById(id);
 
-          if (!existingUser) {
+          if (!existingCordyceps) {
             handler.set.status = 404;
             return {
               message: 'Requested resource was not found!',
@@ -97,7 +95,7 @@ export const usersController = (app: Elysia) =>
             };
           }
 
-          return existingUser;
+          return existingCordyceps;
         } catch (e: unknown) {
           handler.set.status = 500;
           return {
@@ -111,23 +109,23 @@ export const usersController = (app: Elysia) =>
         try {
           const { id } = handler.params;
 
-          const changes: Partial<IUser> = handler.body;
+          const changes: Partial<ICordyceps> = handler.body;
 
-          const updatedUser = await User.findOneAndUpdate(
+          const updatedCordyceps = await Cordyceps.findOneAndUpdate(
             { _id: id },
             { $set: { ...changes } },
             { new: true }
           );
 
-          if (!updatedUser) {
+          if (!updatedCordyceps) {
             handler.set.status = 404;
             return {
-              message: `User with id: ${id} was not found.`,
+              message: `Cordyceps with id: ${id} was not found.`,
               status: 404,
             };
           }
 
-          return updatedUser;
+          return updatedCordyceps;
         } catch (e: unknown) {
           handler.set.status = 500;
           return {
@@ -141,17 +139,17 @@ export const usersController = (app: Elysia) =>
         try {
           const { id } = handler.params;
 
-          const existingUser = await User.findById(id);
+          const existingCordyceps = await Cordyceps.findById(id);
 
-          if (!existingUser) {
+          if (!existingCordyceps) {
             handler.set.status = 404;
             return {
-              message: `User with id: ${id} was not found.`,
+              message: `Cordyceps with id: ${id} was not found.`,
               status: 404,
             };
           }
 
-          await User.findOneAndRemove({ _id: id });
+          await Cordyceps.findOneAndRemove({ _id: id });
 
           return {
             message: `Resource deleted successfully!`,
