@@ -27,7 +27,7 @@ export const authController = (app: Elysia) =>
       }, (app: Elysia) => app
           // This route is protected by the Guard above
           .post('/signin', async (handler: Elysia.Handler) => {
-            const newSess = new AuthSession({
+            let newSess = new AuthSession({
               providerid: 'placeholder',
               uid: 'placeholder',
               emailverified: false,
@@ -45,9 +45,10 @@ export const authController = (app: Elysia) =>
             const credential = GithubAuthProvider.credential(decoded);
             const firebaseApp = initializeApp(FIREBASE_CONFIG);
             const authentic = getAuth(firebaseApp);
-
-            signInWithCredential(authentic, credential)
-              .then((result: any) => {
+            try {
+              const result = await signInWithCredential(authentic, credential);
+            ////signInWithCredential(authentic, credential)
+            ////  .then((result: any) => {
                 newSess.displayname = result.user.displayName;
                 newSess.email = result.user.email;
                 newSess.emailverified = result.user.emailVerified;
@@ -58,11 +59,13 @@ export const authController = (app: Elysia) =>
                 ////newSess.refreshtoken = result.user.refreshToken;
                 ////newSess.phonenumber = result.user.phoneNumber;
                 ////newSess.photourl = result.user.photourl;
-              })
-              .catch((error) => {
+            } catch {
+            ////  })
+            ////  .catch((error) => {
                 handler.set.status = 407;
                 return { message: 'Firebase sign in failed.' };
-              });
+            ////  });
+            }
             try {
               const savedSess = await newSess.save();
 
@@ -94,6 +97,7 @@ export const authController = (app: Elysia) =>
                 status: 500,
               };
             }
+
           }, {
             onError(handler: Elysia.Handler) {
               console.log(`wwwwwww  Handler - Status Code: ${handler.set.status}`);
