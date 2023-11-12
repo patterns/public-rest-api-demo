@@ -27,11 +27,11 @@ export const authController = (app: Elysia) =>
       }, (app: Elysia) => app
           // This route is protected by the Guard above
           .post('/signin', async (handler: Elysia.Handler) => {
-            const newSess = new AuthSession();
+            const newSess = new AuthSession({ providerid: '', uid: '' });
 
             // support is limited to github oauth for demo
             if (handler.body.authprovider != 'github') {
-              handler.set.status = 500;
+              handler.set.status = 501;
               return { message: 'Not implemented' };
             }
             // TODO choose a real decode
@@ -43,7 +43,6 @@ export const authController = (app: Elysia) =>
 
             signInWithCredential(authentic, credential)
               .then((result: any) => {
-                ////console.log('Firebase sign in succeeded.');
                 newSess.displayname = result.user.displayName;
                 newSess.email = result.user.email;
                 newSess.emailverified = result.user.emailVerified;
@@ -56,7 +55,7 @@ export const authController = (app: Elysia) =>
                 ////newSess.photourl = result.user.photourl;
               })
               .catch((error) => {
-                handler.set.status = 500;
+                handler.set.status = 407;
                 return { message: 'Firebase sign in failed.' };
               });
             try {
@@ -73,10 +72,7 @@ export const authController = (app: Elysia) =>
               };
               handler.set.status = 201;
               return newSess;
-              //return {
-              //  message: 'Started sign-in session',
-              //  status: 201,
-              //};
+
             } catch (e: any) {
               // If unique mongoose constraint  is violated
               if (e.name === 'MongoServerError' && e.code === 11000) {
