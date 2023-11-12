@@ -27,7 +27,12 @@ export const authController = (app: Elysia) =>
       }, (app: Elysia) => app
           // This route is protected by the Guard above
           .post('/signin', async (handler: Elysia.Handler) => {
-            const newSess = new AuthSession({ providerid: '', uid: '' });
+            const newSess = new AuthSession({
+              providerid: 'placeholder',
+              uid: 'placeholder',
+              emailverified: false,
+              isanonymous: false,
+            });
 
             // support is limited to github oauth for demo
             if (handler.body.authprovider != 'github') {
