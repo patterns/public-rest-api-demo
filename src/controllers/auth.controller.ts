@@ -40,9 +40,9 @@ export const authController = (app: Elysia) =>
               return { message: 'Not implemented' };
             }
             // TODO choose a real decode
-            const decoded = atob(handler.body.accesstoken);
+            ////const decoded = atob(handler.body.accesstoken);
             // Sign in with the credential from the user.
-            const credential = GithubAuthProvider.credential(decoded);
+            const credential = GithubAuthProvider.credential(handler.body.accesstoken);
             const firebaseApp = initializeApp(FIREBASE_CONFIG);
             const authentic = getAuth(firebaseApp);
             try {
