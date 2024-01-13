@@ -2,6 +2,13 @@
 attempt deploy to render (or heroku free tier) and also proof terraform aws too
 
 
+## spikes
+[<img alt="sequence oauth" width="400px" src="diagram/sequence-oauth.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/sequence-oauth.puml)
+
+[<img alt="firebase auth ui" width="400px" src="diagram/firebase-auth-ui.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/firebase-auth-ui.puml)
+[<img alt="firebase auth manual" width="400px" src="diagram/firebase-auth-manual.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/firebase-auth-manual.puml)
+
+[<img alt="state unverified" width="400px" src="diagram/state-unverified.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/state-unverified.puml)
 
 ## dev notes
 
