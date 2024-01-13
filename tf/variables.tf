@@ -19,7 +19,7 @@
 variable "project_name" {
   type        = string
   description = "the base name to use when creating resources. a randomized suffix will be added."
-  default     = "heroku-mongo-demo"
+  default     = "gcp-bunelysia-demo"
 }
 
 ###-----------------------------------------------------------------------------
@@ -30,11 +30,11 @@ variable "project_name" {
 # for a mapping of Atlas region names to Google Cloud region names. In most cases
 # you should use the same region for both services.
 
-#variable "google_cloud_region" {
-#  type        = string
-#  description = "the Google Cloud region in which to create resources"
-#  default     = "us-central1"
-#}
+variable "google_cloud_region" {
+  type        = string
+  description = "the Google Cloud region in which to create resources"
+  default     = "us-west2"
+}
 
 variable "atlas_cluster_region" {
   type        = string
@@ -42,20 +42,20 @@ variable "atlas_cluster_region" {
   default     = "US_WEST_2"
 }
 
-#variable "app_image" {
-#  type        = string
-#  description = "the fully-qualified name of your app image"
-#  default     = "us-central1-docker.pkg.dev/next22-mean-stack-demo/demo-app/server:latest"
-#}
+variable "app_image" {
+  type        = string
+  description = "the fully-qualified name of your app image"
+  default     = "docker.io/patterns/public-rest-api-demo:cloudrun"
+}
 
 ###-----------------------------------------------------------------------------
 ### Google Cloud
 ###-----------------------------------------------------------------------------
 
-#variable "google_billing_account" {
-#  type        = string
-#  description = "the ID of your Google Cloud billing account"
-#}
+variable "google_billing_account" {
+  type        = string
+  description = "the ID of your Google Cloud billing account"
+}
 
 ###-----------------------------------------------------------------------------
 ### MongoDB Atlas
@@ -89,11 +89,51 @@ variable "atlas_priv_key" {
 variable "db_name" {
   type        = string
   description = "the name of the database to configure"
-  default     = "herokuMongoExample"
+  default     = "bunElysiaExample"
 }
 
 variable "db_user" {
   type        = string
   description = "the username used to connect to the mongodb cluster"
   default     = "mongo"
+}
+
+variable "jwt_secret" {
+  type        = string
+  description = "token value the consumer sends in its Authorization Bearer header"
+  default     = "toinfinityandbeyond"
+}
+
+###-----------------------------------------------------------------------------
+### Firebase SDK
+###-----------------------------------------------------------------------------
+
+variable "firebase_api_key" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_auth_domain" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_project_id" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_storage_bucket" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_messaging_sender_id" {
+  type        = string
+  description = "firebase config inside the app image"
+}
+
+variable "firebase_app_id" {
+  type        = string
+  description = "firebase config inside the app image"
 }

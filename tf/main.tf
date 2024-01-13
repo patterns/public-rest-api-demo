@@ -20,6 +20,11 @@ terraform {
   required_version = ">= 0.13"
 
   required_providers {
+    google = {
+      ##version = "~> 4.36"
+      source  = "hashicorp/google"
+    }
+
     mongodbatlas = {
       ##version = "~> 1.4.5"
       source  = "mongodb/mongodbatlas"
