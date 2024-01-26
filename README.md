@@ -1,35 +1,57 @@
-# public-rest-api-demo
-attempt deploy to render (or heroku free tier) and also proof terraform aws too
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
 
+## Getting Started
 
-## spikes
-[<img alt="sequence oauth" width="400px" src="diagram/sequence-oauth.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/sequence-oauth.puml)
+First, run the development server:
 
-[<img alt="firebase auth ui" width="400px" src="diagram/firebase-auth-ui.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/firebase-auth-ui.puml)
-[<img alt="firebase auth manual" width="400px" src="diagram/firebase-auth-manual.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/firebase-auth-manual.puml)
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-[<img alt="state unverified" width="400px" src="diagram/state-unverified.svg" />](https://github.com/patterns/public-rest-api-demo/blob/main/diagram/state-unverified.puml)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## dev notes
+## Cloudflare integration
 
-- started from the GCP cloudrun meanstack terraform files: https://cloud.google.com/blog/topics/developers-practitioners/easy-deployment-mean-stack-w-mongodb-atlas-cloud-run-and-hashicorp-terraform/
-and adjusted according to the MongoDB blog (by Zuhair Ahmed): https://www.mongodb.com/developer/products/atlas/deploy-mongodb-atlas-terraform-aws/
+Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
+  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
+  - `pages:preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+  - `pages:deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 
-- the hashicorp learn tutorial states that Heroku formation requires a billing account: https://developer.hashicorp.com/terraform/tutorials/applications/heroku-provider
+> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md#recommended-workflow))
 
-- with Leka-Workshop/Bun-CRUD-App attempt to push to gh registry for use as the app_image in cloud run
+### Bindings
 
-- terraform google cloud provider expects app_image to have the registry in the form of [region.]gcr.io, [region-]docker.pkg.dev or docker.io BUT we wanted to use ghcr.io
+Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings/) are what allows you to interact with resources available in the Cloudflare Platform.
 
-- the connection string for the original GCP tutorial didn't need the db_name because the nodejs logic has it in the connect call. We had to append it the the ATLAS_URI since the bun/elysia example is db_name agnostic.
+You can use bindings during development, when previewing locally your application and of course in the deployed application:
 
-- when calling `terraform apply` from the Google Cloud shell, it may be necessary to do `gcloud config unset project` first to remove assocation to existing projects (which may be defaults). Otherwise, you may encounter the error about Cloud Billing API being disabled.
+- To use bindings in dev mode you need to define them in the `next.config.js` file under `setupDevBindings`, this mode uses the `next-dev` `@cloudflare/next-on-pages` submodule. For more details see its [documentation](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md).
 
-- to use postman to obtain a new access token, you can switch the `Authorization callback URL` in GitHub OAuth apps from "https://project-name.firebaseapp.com/__/auth/handler" to "https://oauth.pstmn.io/v1/browser-callback"
+- To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
-- postman fields for endpoints would be "https://github.com/login/oauth/authorize" and "https://github.com/login/oauth/access_token"; also client secret was a newly gen key from github OAuth apps since we can't remember the old key.
+- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
-- with the temp callback switched postman was able to fetch the access token after login credentials passed. Then we copy the access token as "accesstoken" into a separate POST request JSON. Also "authprovider" field value of "github". Postman sends this POST to our cloudrun API at `/api/auth/signin` and the result should be `201`. Confirm it by opening "console.firebase.google.com" and checking the authentication|users list.
+#### KV Example
 
-- using base64 as a placeholder for the access token encoding; docs advise not to transmit the tokens in plain text, so in addition to TLS we want to be safe.
+`c3` has added for you an example showing how you can use a KV binding, in order to enable the example, search for lines containing the following comment:
+```ts
+// KV Example:
+```
 
+and uncomment the commented lines below it.
+
+After doing this you can run the `dev` script and visit the `/api/hello` route to see the example in action.
+
+To then enable such example also in preview mode add a `kv` in the `pages:preview` script like so:
+```diff
+-    "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2023-12-18 --compatibility-flag=nodejs_compat",
++    "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2023-12-18 --compatibility-flag=nodejs_compat --kv MY_KV",
+```
+
+Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.
