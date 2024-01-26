@@ -1,113 +1,149 @@
-import { Elysia, t } from 'elysia';
-import AuthSession, { IAuthSession } from '../entities/authsession.schema';
-import { jwt } from '@elysiajs/jwt';
-import { GithubAuthProvider } from 'firebase/auth';
-import { getAuth, signInWithCredential } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import { FIREBASE_CONFIG } from './firebaseconfig';
+import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
+import { genSalt, hash, compare } from 'bcryptjs';
+import { expressjwt } from 'express-jwt';
+import { JWT_SECRET } from '../resources/settings';
+import User from '../models/User';
+import Roles from '../models/roles'
+import { generateToken, authenticateToken } from '../middleware/auth.middleware';
 
-export const authController = (app: Elysia) =>
-  app.group('/auth', (app: Elysia) =>
-    app
+export const login = async (req: Request, res: Response) => {
 
-      // Using JWT
-      .use(
-        jwt({
-          name: 'jwt',
-          secret: process.env.JWT_SECRET as string,
-        })
-      )
+  const errors = validationResult(req);
 
-      // Validating required properties using Guard schema
-      .guard({
-        body: t.Object({
-            authprovider: t.String(),
-            accesstoken: t.String()
-        })
-      }, (app: Elysia) => app
-          // This route is protected by the Guard above
-          .post('/signin', async (handler: Elysia.Handler) => {
-            let newSess = new AuthSession({
-              providerid: 'placeholder',
-              uid: 'placeholder',
-              emailverified: false,
-              isanonymous: false,
-            });
+  if (!errors.isEmpty()) {
 
-            // support is limited to github oauth for demo
-            if (handler.body.authprovider != 'github') {
-              handler.set.status = 501;
-              return { message: 'Not implemented' };
-            }
-            // TODO choose a real decode
-            ////const decoded = atob(handler.body.accesstoken);
-            // Sign in with the credential from the user.
-            const credential = GithubAuthProvider.credential(handler.body.accesstoken);
-            const firebaseApp = initializeApp(FIREBASE_CONFIG);
-            const authentic = getAuth(firebaseApp);
-            try {
-              const result = await signInWithCredential(authentic, credential);
-            ////signInWithCredential(authentic, credential)
-            ////  .then((result: any) => {
-                newSess.displayname = result.user.displayName;
-                newSess.email = result.user.email;
-                newSess.emailverified = result.user.emailVerified;
-                newSess.isanonymous = result.user.isAnonymous;
-                newSess.providerid = result.user.providerId;
-                newSess.tenantid = result.user.tenantId;
-                newSess.uid = result.user.uid;
-                ////newSess.refreshtoken = result.user.refreshToken;
-                ////newSess.phonenumber = result.user.phoneNumber;
-                ////newSess.photourl = result.user.photourl;
-            } catch {
-            ////  })
-            ////  .catch((error) => {
-                handler.set.status = 407;
-                return { message: 'Firebase sign in failed.' };
-            ////  });
-            }
-            try {
-              const savedSess = await newSess.save();
+    return res.status(400).json({ errors: errors.array() });
 
-              // JWT payload is based off record id **TODO refactor?
-              const sessJWT = await handler.jwt.sign({
-                sessId: savedSess._id
-              });
+  }
 
-              // Returning to the client (via headers)
-              handler.set.headers = {
-                'X-Authorization': sessJWT,
-              };
-              handler.set.status = 201;
-              return newSess;
+  try {
 
-            } catch (e: any) {
-              // If unique mongoose constraint  is violated
-              if (e.name === 'MongoServerError' && e.code === 11000) {
-                handler.set.status = 422;
-                return {
-                  message: 'Resource already exists!',
-                  status: 422,
-                };
-              }
+    const { email, password } = req.body;
 
-              handler.set.status = 500;
-              return {
-                message: 'Unable to save entry to the database!',
-                status: 500,
-              };
-            }
+    const invalidCredentialReturn = () => {
 
-          }, {
-            onError(handler: Elysia.Handler) {
-              console.log(`wwwwwww  Handler - Status Code: ${handler.set.status}`);
-            }
-          })
+      return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
 
-      )
+    };
 
-      // Guard does not affect the following routes
-      //.get('/', async ({ set }: Elysia.Set) => {
-      //})
+    // check if user exists
+    let user = await User.findOne({ email });
 
-  );
+    if (!user) {
+
+      invalidCredentialReturn();
+
+    } else {
+
+      // make sure username and password are valid
+      const isMatch = await compare(password, user.hashed_password);
+
+      if (!isMatch) {
+
+        invalidCredentialReturn();
+
+      } else {
+        // return jsonwebtoken (to authenticate)
+        const payload = {
+          user: {
+            id: user.id,
+            role: user.role
+          },
+        };
+        generateToken(payload, res);
+      }
+    }
+  } catch (err) {
+
+    console.error(err.message);
+    res.status(500).json({ errors: [{ msg: 'Server Error. Please try again.' }] });
+
+  }
+};
+
+export const register = async (req: Request, res: Response) => {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+
+    return res.status(400).json({ errors: errors.array() });
+
+  }
+
+  try {
+
+    const { name: { first, last }, email, password, role: { name } } = req.body;
+
+    // check if email exists
+    let existingEmail = await User.findOne({ email });
+
+    if (existingEmail) {
+
+      return res.status(400).json({ errors: [{ msg: 'User already exists with this email' }] });
+
+    }
+
+    let user_role = await Roles.findOne({ 'name': req.body.role.name });
+    
+    const _id = user_role._id;
+
+    let user = new User({
+
+      name: { first, last },
+      email,
+      password,
+      role: { _id, name }
+
+    });
+
+    const salt = await genSalt(10);
+
+    user.hashed_password = await hash(password, salt);
+
+    await user.save();
+
+    // return jsonwebtoken (to authenticate)
+    const payload = {
+      user: {
+        id: user.id,
+        role: user.role
+      },
+    };
+    generateToken(payload, res);
+
+  } catch (err) {
+
+    console.error(err.message);
+    res.status(500).json({ errors: [{ msg: 'Server Error. Please try again.' }] });
+  }
+
+};
+
+export const logout = (req: Request, res: Response) => {
+
+  return res.status(200).json({
+    message: "You have been logged out"
+  });
+
+};
+
+export const requireLogin = expressjwt({
+  secret: JWT_SECRET,
+  algorithms: ["HS256"],
+  requestProperty: 'payload'
+});
+
+export const hasAuthorization = async (req: Request, res: Response, next: NextFunction) => {
+
+  const authorized = authenticateToken(req, res, next);
+
+  if (!(authorized)) {
+
+    return res.status(403).json({
+      error: "User is not authorized"
+    });
+
+  }
+};
