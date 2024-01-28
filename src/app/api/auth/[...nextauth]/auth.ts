@@ -1,11 +1,8 @@
 
-import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
 
-export const {
-	  handlers: { GET, POST },
-	    auth,
-} = NextAuth({
-	  ...authConfig,
-	  session: { strategy: 'jwt' },
-});
+export const { handlers, auth } = NextAuth({
+  session: { strategy: "jwt" },
+  ...authConfig,
+})
