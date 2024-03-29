@@ -14,7 +14,8 @@
       "@api/*": ["src/api/*"]
     },
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "typeRoots": ["@types", "./node_modules/@types"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "service/auth-service.ts", "src/testdata"],
 }
