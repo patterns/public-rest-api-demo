@@ -2,13 +2,11 @@
   "name": "website_backend",
   "version": "1.0.0",
   "description": "backend service for da-vinci",
-  "main": "src/index.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "docker:db:up": "docker-compose -f docker/mongodb.yml up -d",
-    "docker:db:down": "docker-compose -f docker/mongodb.yml down",
     "start": "node ./dist/index.js",
-    "build": "tsc",
+    "build": "tsc -p .",
     "prettier": "prettier --write \"src/**/*.{ts,css,js,html}\"",
     "test": "jest"
   },
