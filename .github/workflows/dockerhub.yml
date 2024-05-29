@@ -3,7 +3,7 @@ name: Docker Hub Registry
 on:
   push:
     branches:
-      - cloudrun
+      - starlette
 
 jobs:
   push_to_registry:

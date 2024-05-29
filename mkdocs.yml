@@ -1,0 +1,121 @@
+site_name: Starlette Admin
+site_description: Fast, beautiful and extensible administrative interface framework for Starlette/FastApi applications
+site_url: https://jowilf.github.io/starlette-admin
+repo_name: jowilf/starlette-admin
+repo_url: https://github.com/jowilf/starlette-admin
+edit_uri: https://github.com/jowilf/starlette-admin/tree/main/docs
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - content.code.copy
+    - content.action.view
+    - search.suggest
+    - search.highlight
+    - navigation.tabs
+    - navigation.footer
+    - content.tabs.link
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          rendering:
+            show_root_heading: true
+            show_source: true
+  - i18n:
+      default_language: en
+      languages:
+        en:
+          name: English
+          build: false
+        es:
+          name: Español
+          build: true
+      nav_translations:
+        es:
+          Overview: Visión General
+          Tutorial - User Guide: Tutoriales - Guía de Usuario
+          Getting Started: Empezando
+          Configurations: Configuraciones
+          Admin: Admin
+          ModelView: ModelView
+          Forms Validations: Validación de Formularios
+          Authentication: Autenticación
+          Managing Files: Administrando Archivos
+          Multiple Admin: Multiples Admin
+          Advanced User Guide: Guía de Usuario Avanzada
+          Custom Field: Campos Personalizados
+          Extending BaseModelView: Extendiendo BaseModelView
+          Alternatives, Inspiration and Comparisons: Alternativas, Inspiración y Comparaciones
+          API Reference: Referencia de la API
+          Changelog: Registro de Cambios
+
+watch:
+  - starlette_admin
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Overview: 'index.md'
+  - Tutorial - User Guide:
+      - Getting Started: 'tutorial/getting-started/index.md'
+      - Configurations:
+          - Admin: 'tutorial/configurations/admin/index.md'
+          - ModelView: 'tutorial/configurations/modelview/index.md'
+      - Forms Validations: 'tutorial/validations/index.md'
+      - Authentication: 'tutorial/authentication/index.md'
+      - Managing Files: 'tutorial/files/index.md'
+      - Actions: 'tutorial/actions/index.md'
+      - Multiple Admin: 'tutorial/multiple-admin/index.md'
+  - Advanced User Guide:
+      - Custom Field: 'advanced/custom-field/index.md'
+      - Extending BaseModelView: 'advanced/base-model-view/index.md'
+  - Deployment: 'deployment/index.md'
+  - Alternatives, Inspiration and Comparisons: 'alternatives/index.md'
+  - API Reference:
+      - Contrib:
+          - SQLAlchemy:
+              - ModelView: 'api/contrib/sqlalchemy/modelview/index.md'
+      - Fields: 'api/fields/index.md'
+      - Views: 'api/views/index.md'
+      - BaseAdmin: 'api/base-admin/index.md'
+      - Auth: 'api/auth/index.md'
+      - Actions: 'api/actions/index.md'
+  - Changelog: 'changelog/index.md'
+
+extra:
+  analytics:
+    provider: google
+    property: G-PRC6TQ4K82
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jowilf
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/jowilf
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/jocelin-hounon-2008aa139
