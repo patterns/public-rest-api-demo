@@ -1,28 +1,23 @@
-import { Elysia } from 'elysia';
-import { logger } from '@grotto/logysia';
-import './database/db.setup';
-import { securitySetup } from './startup/security'
-import { docsSetup } from './startup/docs';
-import { hooksSetup } from './startup/hooks';
-import { cordycepsController } from './controllers/cordyceps.controller';
-import { staticDataController } from './controllers/static-data.controller';
-import { authController } from './controllers/auth.controller';
+import { fromHono } from "chanfana";
+import { Hono } from "hono";
+import { TaskCreate } from "./endpoints/taskCreate";
+import { TaskDelete } from "./endpoints/taskDelete";
+import { TaskFetch } from "./endpoints/taskFetch";
+import { TaskList } from "./endpoints/taskList";
 
-const PORT = process.env.PORT || 8080;
-export const app = new Elysia();
+// Start a Hono app
+const app = new Hono();
 
-app
-  .use(securitySetup)
-  .use(docsSetup)
-  .use(logger())
-  .use(hooksSetup)
-  .get('/', () => 'Hello Bun.js!')
-  .group('/api', (app: Elysia) =>
-    app
-      .use(cordycepsController)
-      .use(staticDataController)
-      .use(authController)
-  )
-  .listen(PORT, () => {
-    console.log(`🦊 Elysia is running at ${app.server?.hostname}:${PORT}`);
-  });
+// Setup OpenAPI registry
+const openapi = fromHono(app, {
+	docs_url: "/",
+});
+
+// Register OpenAPI endpoints
+openapi.get("/api/tasks", TaskList);
+openapi.post("/api/tasks", TaskCreate);
+openapi.get("/api/tasks/:taskSlug", TaskFetch);
+openapi.delete("/api/tasks/:taskSlug", TaskDelete);
+
+// Export the Hono app
+export default app;
