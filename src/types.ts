@@ -8,3 +8,8 @@ export const Task = z.object({
 	completed: z.boolean().default(false),
 	due_date: DateTime(),
 });
+
+export const Image = z.object({
+	url: Str({ example: "https://example.dev/img1" }),
+	author: Str({ example: "Mary Shelly" }),
+});
