@@ -5,6 +5,7 @@ import { TaskDelete } from "./endpoints/taskDelete";
 import { TaskFetch } from "./endpoints/taskFetch";
 import { TaskList } from "./endpoints/taskList";
 import { ImageList } from "./endpoints/imageList";
+import { ImageCreate } from "./endpoints/imageCreate";
 
 // Start a Hono app
 const app = new Hono();
