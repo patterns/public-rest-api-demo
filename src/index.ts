@@ -20,6 +20,7 @@ openapi.post("/api/tasks", TaskCreate);
 openapi.get("/api/tasks/:taskSlug", TaskFetch);
 openapi.delete("/api/tasks/:taskSlug", TaskDelete);
 openapi.get("/api/images", ImageList);
+openapi.post("/api/images", ImageCreate);
 
 // Export the Hono app
 export default app;
