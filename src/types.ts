@@ -10,6 +10,7 @@ export const Task = z.object({
 });
 
 export const Image = z.object({
+	id: z.number().int().positive(),
 	url: Str({ example: "https://example.dev/img1" }),
 	author: Str({ example: "Mary Shelly" }),
 });
