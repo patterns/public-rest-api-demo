@@ -6,6 +6,7 @@ import { TaskFetch } from "./endpoints/taskFetch";
 import { TaskList } from "./endpoints/taskList";
 import { ImageList } from "./endpoints/imageList";
 import { ImageCreate } from "./endpoints/imageCreate";
+import { ImageFetch } from "./endpoints/imageFetch";
 
 // Start a Hono app
 const app = new Hono();
@@ -22,6 +23,7 @@ openapi.get("/api/tasks/:taskSlug", TaskFetch);
 openapi.delete("/api/tasks/:taskSlug", TaskDelete);
 openapi.get("/api/images", ImageList);
 openapi.post("/api/images", ImageCreate);
+openapi.get("/api/images/:imageSlug", ImageFetch);
 
 // Export the Hono app
 export default app;
