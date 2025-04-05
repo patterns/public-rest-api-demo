@@ -9,7 +9,7 @@ export class ImageFetch extends OpenAPIRoute {
 		summary: "Get a single image by slug",
 		request: {
 			params: z.object({
-				taskSlug: Str({ description: "Image slug" }),
+				imageSlug: Str({ description: "Image slug" }),
 			}),
 		},
 		responses: {
