@@ -52,7 +52,7 @@ export class ImageFetch extends OpenAPIRoute {
 		const { imageSlug } = data.params;
 
 		// Implement your own object fetch here
-		let​ imageMatch = ALL_IMAGES.find(i => i.id == imageSlug)
+		let imageMatch = ALL_IMAGES.find(i => i.id == imageSlug)
 		const exists = (imageMatch || false);
 
 		// @ts-ignore: check if the object exists
