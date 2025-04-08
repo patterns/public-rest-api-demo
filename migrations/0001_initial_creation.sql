@@ -1,5 +1,9 @@
 -- Migration number: 0001 	 2025-04-05T02:03:21.114Z
 
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS lessons;
+DROP TABLE IF EXISTS courses;
 
 CREATE TABLE roles (
     -- Access control roles for administration activities.
