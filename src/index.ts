@@ -21,7 +21,7 @@ openapi.get("/api/tasks/:taskSlug", TaskFetch);
 openapi.delete("/api/tasks/:taskSlug", TaskDelete);
 openapi.get("/api/users", ListUsers);
 openapi.post("/api/users", CreateUser);
-openapi.get("/api/users/:userSlug", GetUser);
+openapi.get("/api/users/:userId", GetUser);
 
 // Export the Hono app
 export default app;
