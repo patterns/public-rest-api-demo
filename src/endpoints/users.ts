@@ -13,12 +13,6 @@ const UserModel = z.object({
 });
 
 // Define the Meta object for User
-const createMeta = {
-    model: {
-        schema: z.object({rawdata: z.string().max(1024)}),
-        tableName: 'users', // Table name in D1 database
-    },
-};
 const userMeta = {
     model: {
         schema: UserModel,
@@ -27,7 +21,24 @@ const userMeta = {
     },
 };
 
-export class CreateUser extends D1CreateEndpoint { _meta = createMeta; dbName = "DB"; }
 export class GetUser extends D1ReadEndpoint { _meta = userMeta; dbName = "DB"; }
 export class ListUsers extends D1ListEndpoint { _meta = userMeta; dbName = "DB"; }
+
+const createMeta = {
+    model: {
+        schema: z.object(),
+        tableName: 'users', // Table name in D1 database
+    },
+};
+export class CreateUser extends D1CreateEndpoint {
+    _meta = createMeta;
+    dbName = "DB";
+
+    async create(data: z.object()) {
+        // save 'data' to a database here
+
+        return data; // Return the created object
+    }
+
+}
 
