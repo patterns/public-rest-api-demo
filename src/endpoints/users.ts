@@ -40,18 +40,19 @@ export class CreateUser extends D1CreateEndpoint {
 
     async create(data: z.infer<typeof CreateModel>) {
         let inserted;
+        let serialized;
+        try {
+            serialized = JSON.stringify(data)
+        } catch (e: any) {
+            // capture exception when stringify encounters BigInt/circular
+            serialized = JSON.stringify(e, Object.getOwnPropertyNames(e))
+        }
         try {
           const result = await this.getDBBinding()
             .prepare(
               `INSERT INTO ${this.meta.model.tableName} (rawdata) VALUES (?) RETURNING *`,
             )
-            .bind(try {
-                JSON.stringify(data)
-              } catch (e: any) {
-                // capture exception when stringify encounters BigInt/circular
-                JSON.stringify(e, Object.getOwnPropertyNames(e))
-              }
-            )
+            .bind(serialized)
             .all();
 
           inserted = result.results[0] as O<typeof this.meta>;
