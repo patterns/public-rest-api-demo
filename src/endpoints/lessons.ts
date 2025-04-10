@@ -4,7 +4,7 @@ import { z } from "zod";
 
 
 // Define the Lesson Model
-const UserModel = z.object({
+const LessonModel = z.object({
     id: z.number(),
     created: z.string().datetime(),
     title: z.string().min(3).max(255),
