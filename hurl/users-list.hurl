@@ -1,4 +1,4 @@
-GET https://public-rest-api-demo.hsinih.workers.dev/api/images
+GET https://public-rest-api-demo.hsinih.workers.dev/api/users
 [Query]
 page: 1
 HTTP 200
