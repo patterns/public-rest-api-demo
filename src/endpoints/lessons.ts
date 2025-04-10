@@ -20,7 +20,7 @@ const lessonMeta = {
 };
 
 export class GetLesson extends D1ReadEndpoint { _meta = lessonMeta; dbName = "DB"; }
-export class ListLesson extends D1ListEndpoint { _meta = lessonMeta; dbName = "DB"; }
+export class ListLessons extends D1ListEndpoint { _meta = lessonMeta; dbName = "DB"; }
 
 // with create, we want to accept free form JSON for now 
 const CreateModel = z.object({
