@@ -7,8 +7,12 @@ import { CreateUser, GetUser, ListUsers } from "./endpoints/users";
 import { CreateLesson, GetLesson, ListLessons } from "./endpoints/lessons";
 import { CreateCourse, GetCourse, ListCourses } from "./endpoints/courses";
 
+type Bindings = {
+ DB: D1Database
+ DEMO_API_KEY: string
+}
 // Start a Hono app
-const app = new Hono<{ Bindings: { DB: D1Database }}>();
+const app = new Hono<{ Bindings: Bindings }>()
 
 // Setup OpenAPI registry
 const openapi = fromHono(app, {
@@ -18,7 +22,7 @@ const openapi = fromHono(app, {
 // API Key Authentication Middleware
 const apiKeyAuthMiddleware = async (c, next) => {
     const apiKey = c.req.header('X-API-Key');
-    if (!apiKey || apiKey !== process.env.DEMO_API_KEY) { // Validate against API_KEY environment variable
+    if (!apiKey || apiKey !== c.env.DEMO_API_KEY) { // Validate against API_KEY environment variable
         throw new HTTPException(401, { message: 'Invalid API Key.' })
     }
     await next();
