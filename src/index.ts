@@ -15,10 +15,19 @@ const openapi = fromHono(app, {
 	docs_url: "/",
 });
 
+// API Key Authentication Middleware
+const apiKeyAuthMiddleware = async (c, next) => {
+    const apiKey = c.req.header('X-API-Key');
+    if (!apiKey || apiKey !== process.env.DEMO_API_KEY) { // Validate against API_KEY environment variable
+        throw new HTTPException(401, { message: 'Invalid API Key.' })
+    }
+    await next();
+};
+
 // Register OpenAPI endpoints
 //openapi.get("/api/tasks/:taskSlug", TaskFetch);
 //openapi.delete("/api/tasks/:taskSlug", TaskDelete);
-openapi.get("/api/users", ListUsers);
+openapi.get("/api/users", apiKeyAuthMiddleware, ListUsers);
 openapi.post("/api/users", CreateUser);
 openapi.get("/api/users/:id", GetUser);
 openapi.get("/api/lessons", ListLessons);
