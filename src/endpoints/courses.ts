@@ -5,16 +5,21 @@ import { z } from "zod";
 
 // Define the Course Model
 const CourseModel = z.object({
-    id: z.number(),
-    created: z.string().datetime(),
-    name: z.string().min(3).max(255),
+    courseId: z.string(),
+    title: z.string(),
+    description: z.string(),
+    image: z.string().url(),
+    subject: z.string(),
+    instructor: z.string(),
+    updated: z.string().datetime(),
+    published: z.string().datetime(),
 });
 
 // Define the Meta object for Course
 const courseMeta = {
     model: {
-        schema: CourseModel,
-        primaryKeys: ['id'],
+        schema: CourseModel.omit({id: true, created: true, rawdata: true}),
+        primaryKeys: ['courseId'],
         tableName: 'courses', // Table name in D1 database
     },
 };
@@ -24,7 +29,7 @@ export class ListCourses extends D1ListEndpoint { _meta = courseMeta; dbName = "
 
 // with create, we want to accept free form JSON for now 
 const CreateModel = z.object({
-    name: z.string().min(3).max(255),
+    courseId: z.string().min(3),
 }).catchall(z.unknown());
 const createMeta = {
     model: {

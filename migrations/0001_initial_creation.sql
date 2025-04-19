@@ -32,6 +32,14 @@ DROP TABLE IF EXISTS courses;
 CREATE TABLE IF NOT EXISTS courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     rawdata TEXT NOT NULL,
-    created TEXT DEFAULT CURRENT_TIMESTAMP
+    created TEXT DEFAULT CURRENT_TIMESTAMP,
+    courseid AS (json_extract(rawdata, '$.courseId')) STORED,
+    title AS (json_extract(rawdata, '$.title')) STORED,
+    description AS (json_extract(rawdata, '$.description')) STORED,
+    image AS (json_extract(rawdata, '$.image')) STORED,
+    subject AS (json_extract(rawdata, '$.subject')) STORED,
+    instructor AS (json_extract(rawdata, '$.instructor')) STORED,
+    updated AS (json_extract(rawdata, '$.updated')) STORED,
+    published AS (json_extract(rawdata, '$.published')) STORED
 );
 

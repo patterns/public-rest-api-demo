@@ -39,7 +39,7 @@ openapi.post("/api/lessons", CreateLesson);
 openapi.get("/api/lessons/:id", GetLesson);
 openapi.get("/api/courses", ListCourses);
 openapi.post("/api/courses", CreateCourse);
-openapi.get("/api/courses/:id", GetCourse);
+openapi.get("/api/courses/:courseId", GetCourse);
 
 // Export the Hono app
 export default app;
