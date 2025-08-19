@@ -10,30 +10,44 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id UUID DEFAULT uuid_generate_v4 () PRIMARY KEY,
     created TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
-    rawdata JSONB NOT NULL,
-    email TEXT GENERATED ALWAYS AS (rawdata->>'email') STORED,
+    rawdata JSONB NOT NULL
 );
 
 DROP TABLE IF EXISTS lessons;
 CREATE TABLE lessons (
     id UUID DEFAULT uuid_generate_v4 () PRIMARY KEY,
     created TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
-    rawdata JSONB NOT NULL,
+    rawdata JSONB NOT NULL
 );
 
 DROP TABLE IF EXISTS courses;
 CREATE TABLE courses (
     id UUID DEFAULT uuid_generate_v4 () PRIMARY KEY,
     created TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
-    rawdata JSONB NOT NULL,
-    courseid TEXT GENERATED ALWAYS AS (rawdata->>'courseId') STORED,
-    title TEXT GENERATED ALWAYS AS (rawdata->>'title') STORED,
-    description TEXT GENERATED ALWAYS AS (rawdata->>'description') STORED,
-    image TEXT GENERATED ALWAYS AS (rawdata->>'image') STORED,
-    subject TEXT GENERATED ALWAYS AS (rawdata->>'subject') STORED,
-    instructor TEXT GENERATED ALWAYS AS (rawdata->>'instructor') STORED,
+    rawdata JSONB NOT NULL
 );
 
+-- define views that extract from json
+CREATE VIEW users_v AS
+SELECT
+    id, created,
+    rawdata ->> 'email' AS email
+
+FROM users;
+
+CREATE VIEW courses_v AS
+SELECT
+    id, created,
+    rawdata ->> 'courseid' AS courseid,
+    rawdata ->> 'title' AS title,
+    rawdata ->> 'description' AS description,
+    rawdata ->> 'image' AS image,
+    rawdata ->> 'subject' AS subject,
+    rawdata ->> 'instructor' AS instructor,
+    rawdata ->> 'updated' AS updated,
+    rawdata ->> 'published' AS published
+
+FROM courses;
 
 
 

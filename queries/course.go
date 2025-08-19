@@ -17,7 +17,7 @@ func (q *CourseQueries) GetCourses() ([]models.Course, error) {
 	courses := []models.Course{}
 
 	// Define query string.
-	query := `SELECT *, rawdata->>'updated' AS updated, rawdata->>'published' AS published FROM courses`
+	query := `SELECT * FROM courses_v`
 
 	// Send query to database.
 	err := q.Select(&courses, query)
@@ -36,7 +36,7 @@ func (q *CourseQueries) GetCourse(id uuid.UUID) (models.Course, error) {
 	course := models.Course{}
 
 	// Define query string.
-	query := `SELECT *, rawdata->>'updated' AS updated, rawdata->>'published' AS published FROM courses WHERE id = $1`
+	query := `SELECT * FROM courses_v WHERE id = $1`
 
 	// Send query to database.
 	err := q.Get(&course, query, id)
